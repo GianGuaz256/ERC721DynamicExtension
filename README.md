@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-    ![](./erc721logo.jpg)
+  <a href="" target="blank"><img src="https://ipfs.io/ipfs/QmPTZUJC4aw4rcYkLMG3Shg9nTfFAR1xk3gidmRpXrDCPj" width="350" alt="DynamicNFT" /></a>
 </p>
 
 <p align="center" style="margin: 10px">A Smart Contract that allows you to add stories to a given non-fungible token. The tokens developed start from <a href="https://docs.openzeppelin.com/contracts/4.x/erc721">OpenZeppelin</a> code on ERC721 with URIStorage extension and are therefore fully compatible with <a href="https://opensea.io/">Opensea</a> and the various marketplaces. Below you can find an explanation of the functions and state variables.</p>
