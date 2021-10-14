@@ -9,11 +9,18 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract Collection1 is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
+
     Counters.Counter private _tokenIdCounter;
     
+    // Mapping from token ID to dynamicData
     mapping(uint256=>string[]) private dynamicData;
 
     constructor() ERC721("Collection1", "CLL1") {}
+
+    modifier onlyTokenOwner(uint256 _tokenId){
+        require(ownerOf(_tokenId)==msg.sender, "Sender is not the owner of the token");
+        _;
+    }
 
     function safeMint(address to, string memory _uri) public onlyOwner {
         _safeMint(to, _tokenIdCounter.current());
@@ -36,18 +43,35 @@ contract Collection1 is ERC721, ERC721URIStorage, Ownable {
         return super.tokenURI(tokenId);
     }
     
-    function addDataToDynamicNFT(uint256 _tokenId, string memory _data) public onlyOwner {
-        //check must be done in the client of the app
+    /**
+     * @dev Add a DynamicData to the array of a specific 'tokenId'.
+     *
+     * Tokens dynamicData can only be managed by the owner of that token.
+     *
+     * DynamicData can only be pushed into the array and not popped. 
+     * Check first if the token exists and then add data. 
+     */
+    function addDataToDynamicNFT(uint256 _tokenId, string memory _data) public onlyTokenOwner(_tokenId) {
         require(_exists(_tokenId), "ERC721URIStorage: URI set of nonexistent token");
         dynamicData[_tokenId].push(_data);
     }
     
-    function getDynamiData(uint256 _tokenId) external view onlyOwner returns(string[] memory) {
+    /**
+     * @dev Returns the DynamicData of a specific 'tokenId'.
+     *
+     * Tokens dynamicData can be seen by everybody in order to make it a standard for marketplace.
+     * 
+     * Check first if the token exists and then return the dynamicData. 
+     */
+    function getDynamiData(uint256 _tokenId) external view returns(string[] memory) {
         require(_exists(_tokenId), "ERC721URIStorage: URI set of nonexistent token");
         return dynamicData[_tokenId];
     }
     
-    function getTokenIdsCount() external view onlyOwner returns(uint256) {
+    /**
+     * @dev Returns the current tokenId counter.
+     */
+    function getTokenIdsCount() external view returns(uint256) {
         return _tokenIdCounter.current();
     }
 }
